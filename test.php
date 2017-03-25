@@ -1,6 +1,11 @@
 <?php
 
+require_once("sgrscp.class.php");
 
-exit(2);
+
+$inst1 = new sgrscp("up20150312");
+
+
+exit(0);
 
 ?>
