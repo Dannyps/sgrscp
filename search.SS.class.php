@@ -1,6 +1,11 @@
 <?php
 
-class sgrscp{
+require_once("course.SS.class.php");
+require_once("student.SS.class.php");
+//require_once("course.SS.class.php");
+
+
+class SS_search{
 
 	function __construct($upN){
 		if(!$this->isValidUPNumber($upN)){
@@ -18,7 +23,7 @@ class sgrscp{
 		$doc->loadHTML( $res);
 		$xpath = new DOMXpath( $doc);
 		for($i=1;$i<$xpath->query('//table[@class="dados"]')->item(0)->childNodes->length;$i++){
-			
+
 			foreach($xpath->query('//table[@class="dados"]')->item(0)->childNodes->item($i)->childNodes as $node){
 				if(!isset($node->tagName)){
 					continue;
