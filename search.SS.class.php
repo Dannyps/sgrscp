@@ -28,10 +28,10 @@ class SS_search{
 		return $xpath->query('//table[@class="dados"]')->item(0)->childNodes->length-1;
 	}
 
-	function interpretResTable($res){
+	function interpretResTable(){
 		libxml_use_internal_errors( true);
 		$doc = new DOMDocument;
-		$doc->loadHTML( $res);
+		$doc->loadHTML( $this->res);
 		$xpath = new DOMXpath( $doc);
 		for($i=1;$i<$xpath->query('//table[@class="dados"]')->item(0)->childNodes->length;$i++){
 
