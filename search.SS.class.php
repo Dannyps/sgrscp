@@ -7,15 +7,27 @@ require_once("student.SS.class.php");
 
 class SS_search{
 
+	private $res; // to keep the curl response
+
 	function __construct($upN){
 		if(!$this->isValidUPNumber($upN)){
 			throw new exception("Invalid UP number passed!");
 		}
 
-		$res=$this->makeCurlPostReq("https://sigarra.up.pt/up/pt/u_fest_geral.querylist", "pv_curso_id=&pv_ramo_id=&pa_inst=18380&pa_inst=18395&pa_inst=18379&pa_inst=18493&pa_inst=18383&pa_inst=18487&pa_inst=18491&pa_inst=18490&pa_inst=18381&pa_inst=18492&pa_inst=18494&pa_inst=18384&pa_inst=18489&pa_inst=18382&PV_NUMERO_DE_ESTUDANTE=".substr($upN, 2)."&PV_NOME=&PV_EMAIL=&PV_TIPO_DE_CURSO=&pv_curso_nome=&pv_ramo_nome=&PV_AREA_FORM_CONT_ID=&PV_ESTADO=&PV_EM=&PV_ATE=&PV_1_INSCRICAO_EM=&PV_ATE_2=&PV_TIPO=&pv_n_registos=20");
-		var_dump($this->interpretResTable($res[1]));
+		$this->res=$this->makeCurlPostReq("https://sigarra.up.pt/up/pt/u_fest_geral.querylist", "pv_curso_id=&pv_ramo_id=&pa_inst=18380&pa_inst=18395&pa_inst=18379&pa_inst=18493&pa_inst=18383&pa_inst=18487&pa_inst=18491&pa_inst=18490&pa_inst=18381&pa_inst=18492&pa_inst=18494&pa_inst=18384&pa_inst=18489&pa_inst=18382&PV_NUMERO_DE_ESTUDANTE=".substr($upN, 2)."&PV_NOME=&PV_EMAIL=&PV_TIPO_DE_CURSO=&pv_curso_nome=&pv_ramo_nome=&PV_AREA_FORM_CONT_ID=&PV_ESTADO=&PV_EM=&PV_ATE=&PV_1_INSCRICAO_EM=&PV_ATE_2=&PV_TIPO=&pv_n_registos=20")[1];
 	}
 
+	public function countResults():int{
+		libxml_use_internal_errors( true);
+		$doc = new DOMDocument;
+		$doc->loadHTML( $this->res);
+		$xpath = new DOMXpath( $doc);
+		var_dump($xpath->query('//div[@id=erro]')->item(0)->textContent);
+		if($xpath->query('//div[@id=erro]')->item(0)->length!=0){
+			return 0;
+		}
+		return $xpath->query('//table[@class="dados"]')->item(0)->childNodes->length-1;
+	}
 
 	function interpretResTable($res){
 		libxml_use_internal_errors( true);
@@ -31,7 +43,7 @@ class SS_search{
 				var_dump($node->textContent);
 			}
 		}
-		
+
 		return "a";
 	}
 
@@ -53,7 +65,7 @@ class SS_search{
 	function isValidUPNumber($upN):bool{
 		if($upN[0]!='u' || $upN[1]!='p')
 			return false;
-		
+
 		if(strlen($upN)!=11)
 			return false;
 
@@ -65,7 +77,7 @@ class SS_search{
 		return true;
 	}
 
-	
+
 
 }
 
