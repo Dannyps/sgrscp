@@ -22,8 +22,7 @@ class SS_search{
 		$doc = new DOMDocument;
 		$doc->loadHTML( $this->res);
 		$xpath = new DOMXpath( $doc);
-		var_dump($xpath->query('//div[@id=erro]')->item(0)->textContent);
-		if($xpath->query('//div[@id=erro]')->item(0)->length!=0){
+		if($xpath->query('//div[@id="erro"]')->length!=0){
 			return 0;
 		}
 		return $xpath->query('//table[@class="dados"]')->item(0)->childNodes->length-1;
@@ -44,7 +43,7 @@ class SS_search{
 			}
 		}
 
-		return "a";
+		return NULL;
 	}
 
 	function makeCurlPostReq($url, $postStr){
