@@ -5,7 +5,9 @@ class SS_course{
     private $name;
     private $sigla;
 
-    function __construct($name);
+    function __construct($name){
+        
+    }
 
 
 }
