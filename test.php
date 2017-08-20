@@ -7,8 +7,9 @@ $inst1 = new SS_search($argv[1]);
 
 if($inst1->countResults()==0){
   echo "Sem resultados.\n";
-}else
-  var_dump($inst1->interpretResTable());
+}else{
+	echo $inst1->student;
+}
 
 exit(0);
 
