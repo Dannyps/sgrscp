@@ -29,7 +29,7 @@ class SS_search{
 				$this->res=utf8_encode($this->res);
 				$this->interpretNameResult();
 			break;
-			case 'couse':
+			case 'course':
 				//if($verbose) echo "Proceding with a course search...".PHP_EOL;
 				$this->res=$this->makeCurlPostReq("https://sigarra.up.pt/up/pt/u_fest_geral.querylist", "pv_curso_id=&pv_ramo_id=&pa_inst=18380&pa_inst=18395&pa_inst=18379&pa_inst=18493&pa_inst=18383&pa_inst=18487&pa_inst=18491&pa_inst=18490&pa_inst=18381&pa_inst=18492&pa_inst=18494&pa_inst=18384&pa_inst=18489&pa_inst=18382&PV_NUMERO_DE_ESTUDANTE=".substr($upN, 2)."&PV_NOME=&PV_EMAIL=&PV_TIPO_DE_CURSO=&pv_curso_nome=&pv_ramo_nome=&PV_AREA_FORM_CONT_ID=&PV_ESTADO=&PV_EM=&PV_ATE=&PV_1_INSCRICAO_EM=&PV_ATE_2=&PV_TIPO=&pv_n_registos=20")[1];
 				$this->res=utf8_encode($this->res);
@@ -50,7 +50,7 @@ class SS_search{
 		$doc = new DOMDocument;
 		$doc->loadHTML( utf8_decode($this->res));
 		$xpath = new DOMXpath( $doc);
-		var_dump($xpath->query('//div[@id="conteudoinner"]/h1')->item(1)->textContent); die();
+		var_dump($xpath->query('//div[@id="conteudoinner"]/h1')->item(1)->textContent);
 		$name=$xpath->query('//div[@id="conteudoinner"]/h1')->item(0)->textContext;
 		$this->student = new SS_student($this->number, $name);
 	}
@@ -73,11 +73,15 @@ class SS_search{
 		}
 
 		$names=array();
+		$course=array();
 		libxml_use_internal_errors(true);
 		$doc = new DOMDocument;
 		$doc->loadHTML( utf8_decode($this->res));
 		$xpath = new DOMXpath( $doc);
 		for($i=1;$i<$xpath->query('//table[@class="dados"]')->item(0)->childNodes->length;$i++){
+			
+			array_push($course, new SS_Course($xpath->query('//table[@class="dados"]')->item(0)->childNodes->item($i)->childNodes->item(4)->textContent));
+			
 			array_push($names, $xpath->query('//table[@class="dados"]')->item(0)->childNodes->item($i)->childNodes->item(2)->textContent);
 			
 			foreach($xpath->query('//table[@class="dados"]')->item(0)->childNodes->item($i)->childNodes as $node){
@@ -95,7 +99,8 @@ class SS_search{
 		}
 		
 		$this->student = new SS_student($this->number, $name[0]);
-		
+		$this->courses = $course;
+				
 		//echo $name;
 
 		return NULL;
