@@ -1,11 +1,11 @@
 <?php
 
 class SS_course{
-    private $ready=false;
-    private $name;
-    private $sigla;
+    public $name;
+    public $sigla;
+    public $code;
 
-    function __construct($name){
+    function __construct($name, $sigla, $code){
         
     }
 

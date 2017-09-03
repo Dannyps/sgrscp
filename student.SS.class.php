@@ -5,6 +5,7 @@ class SS_student{
     private $name="";
     private $courses;
 	private $number;
+	public $isActive;
 	
 	function __construct($number, $name){
         $this->number=$number;
@@ -14,6 +15,8 @@ class SS_student{
 	function __toString(){
 		return "[$this->number] $this->name".PHP_EOL;
 	}
+
+	
 }
 
 ?>
