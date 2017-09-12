@@ -50,7 +50,7 @@ class SS_search{
 		$doc = new DOMDocument;
 		$doc->loadHTML( utf8_decode($this->res));
 		$xpath = new DOMXpath( $doc);
-		var_dump($xpath->query('//div[@id="conteudoinner"]/h1')->item(1)->textContent);
+
 		$name=$xpath->query('//div[@id="conteudoinner"]/h1')->item(0)->textContext;
 		$this->student = new SS_student($this->number, $name);
 	}
@@ -88,7 +88,7 @@ class SS_search{
 				if(!isset($node->tagName)){
 					continue;
 				}
-				var_dump($node->textContent);
+				//var_dump($node->textContent);
 			}
 		}
 		$name=array_unique($names);

@@ -3,7 +3,7 @@
 class SS_course{
     public $name;
     public $sigla;
-    public $code;
+    public $code=null;
 
     function __construct($name){
 		
@@ -15,14 +15,18 @@ class SS_course{
 	*/
 	
 	public function getCode(){
-		$this->res=$this->makeCurlPostReq("https://sigarra.up.pt/up/pt/u_cursos_geral.querylist", "pa_inst=18380&pa_inst=18395&pa_inst=18379&pa_inst=18493&pa_inst=18383&pa_inst=18487&pa_inst=18491&pa_inst=18490&pa_inst=18381&pa_inst=18492&pa_inst=18494&pa_inst=18384&pa_inst=18489&pa_inst=18382&pv_tipo=&pv_nome=".urlencode($this->name)."&pv_sigla=&PV_ACTIVO_NO_ANO_LECTIVO=")[1];
+		if($this->code!=NULL){
+			return $this->code;
+		}
+		$this->res=$this->makeCurlPostReq("https://sigarra.up.pt/up/pt/u_cursos_geral.querylist", "pa_inst=18380&pa_inst=18395&pa_inst=18379&pa_inst=18493&pa_inst=18383&pa_inst=18487&pa_inst=18491&pa_inst=18490&pa_inst=18381&pa_inst=18492&pa_inst=18494&pa_inst=18384&pa_inst=18489&pa_inst=18382&pv_tipo=&pv_nome=".urlencode(utf8_decode($this->name))."&pv_sigla=&PV_ACTIVO_NO_ANO_LECTIVO=")[1];
 		$this->res=utf8_encode($this->res);
 		libxml_use_internal_errors(true);
 		$doc = new DOMDocument;
 		$doc->loadHTML( utf8_decode($this->res));
 		$xpath = new DOMXpath( $doc);
-		var_dump($xpath->query('//[@id="conteudoinner"]/td[3]')->item(1)->textContent);
-
+		$url=$xpath->query('//div[@id="conteudoinner"]//td[2]/a')->item(0)->getAttribute("href");
+		$exploded=explode("=", $url);
+		return end($exploded);
 	}
 
 	function makeCurlPostReq($url, $postStr){
@@ -38,6 +42,10 @@ class SS_course{
 		curl_close($ch);
 
 		return explode("\r\n\r\n", $output, 2);
+	}
+
+	function __toString(){
+		return "[".$this->getCode()."] $this->name".PHP_EOL;
 	}
 
 }

@@ -14,8 +14,11 @@ if($inst1->countResults()==0){
 	echo $inst1->student;
 }
 
-$inst1->courses[0]->getCode();
-var_dump($inst1->courses);
+foreach($inst1->courses as $c){
+  echo $c;
+}
+//echo $inst1->courses[0];
+//var_dump($inst1->courses);
 
 exit(0);
 
