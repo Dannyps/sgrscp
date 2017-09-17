@@ -51,7 +51,7 @@ class SS_search{
 		$doc->loadHTML( utf8_decode($this->res));
 		$xpath = new DOMXpath( $doc);
 
-		$name=$xpath->query('//div[@id="conteudoinner"]/h1')->item(0)->textContext;
+		$name=$xpath->query('//div[@id="conteudoinner"]/h1')->item(1)->textContent;
 		$this->student = new SS_student($this->number, $name);
 	}
 
@@ -80,7 +80,8 @@ class SS_search{
 		$xpath = new DOMXpath( $doc);
 		for($i=1;$i<$xpath->query('//table[@class="dados"]')->item(0)->childNodes->length;$i++){
 			
-			array_push($course, new SS_Course($xpath->query('//table[@class="dados"]')->item(0)->childNodes->item($i)->childNodes->item(4)->textContent));
+			if($xpath->query('//table[@class="dados"]')->item(0)->childNodes->item($i)->childNodes->item(4)->textContent!="")
+				array_push($course, new SS_Course($xpath->query('//table[@class="dados"]')->item(0)->childNodes->item($i)->childNodes->item(4)->textContent));
 			
 			array_push($names, $xpath->query('//table[@class="dados"]')->item(0)->childNodes->item($i)->childNodes->item(2)->textContent);
 			

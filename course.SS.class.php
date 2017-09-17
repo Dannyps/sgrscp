@@ -24,9 +24,17 @@ class SS_course{
 		$doc = new DOMDocument;
 		$doc->loadHTML( utf8_decode($this->res));
 		$xpath = new DOMXpath( $doc);
-		$url=$xpath->query('//div[@id="conteudoinner"]//td[2]/a')->item(0)->getAttribute("href");
-		$exploded=explode("=", $url);
-		return end($exploded);
+		if($xpath->query('//div[@id="conteudoinner"]//td[2]/a')->length==0){
+			$this->code="";
+			$this->sigla="";
+			return "";
+		}else{
+			$url=$xpath->query('//div[@id="conteudoinner"]//td[2]/a')->item(0)->getAttribute("href");
+			$exploded=explode("=", $url);
+			$this->code = end($exploded);
+			$this->sigla = $xpath->query('//div[@id="conteudoinner"]//td[3]')->item(0)->textContent;
+			return end($exploded);
+		}
 	}
 
 	function makeCurlPostReq($url, $postStr){
@@ -45,7 +53,8 @@ class SS_course{
 	}
 
 	function __toString(){
-		return "[".$this->getCode()."] $this->name".PHP_EOL;
+		$this->getCode();
+		return sprintf("%05d - ", $this->code) . "[".$this->sigla."] $this->name".PHP_EOL;
 	}
 
 }
