@@ -117,8 +117,14 @@ class SS_search{
 
 		$output=curl_exec($ch);
 
-		curl_close($ch);
+		// Check for errors and display the error message
+		if($errno = curl_errno($ch)) {
+			$error_message = curl_strerror($errno);
+			echo "cURL error ({$errno}):\n {$error_message}";
+			exit(1);
+		}
 
+		curl_close($ch);
 		return explode("\r\n\r\n", $output, 2);
 	}
 
